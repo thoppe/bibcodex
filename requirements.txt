@@ -1,0 +1,13 @@
+# API access
+
+requests
+biopython # Entrez (PUBMED)
+
+# Caching
+
+diskcache
+brotlicffi
+
+# CLI logging
+
+wasabi

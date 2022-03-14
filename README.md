@@ -9,9 +9,11 @@ Library to access, analyze, and display bibliographic information. WORK IN PROGR
 + API access: Semantic Scholar
 + API access: CoLIL
 + API access: arXiv
-+ Caching
++ API Caching
++ API Caching invalidating
 + Testing harness
 + CI linting
++ pypi library
 + README with examples
 + Embedding functions (SPECTER)
 + Clustering
