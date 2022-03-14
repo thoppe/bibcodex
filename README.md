@@ -10,7 +10,8 @@ Library to access, analyze, and display bibliographic information. WORK IN PROGR
 + API access: CoLIL
 + API access: arXiv
 + API Caching
-+ API Caching invalidating
++ API Caching, invalidating
++ API Caching, in-class domain
 + Testing harness
 + CI linting
 + pypi library

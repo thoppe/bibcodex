@@ -24,12 +24,16 @@ class CachedDownloader:
         self.cache = dc.Cache(f"cache/{self.name}")
         self.sess = requests.session()
 
-    def __len__(self):
-        # Return the size of the cache
-        return len(list(self.cache))
-
     def __iter__(self):
         yield from self.cache
+
+    def __len__(self):
+        # Return the number of items in the cache
+        return len(list(self.cache))
+
+    def size(self):
+        # Returns the disk size of the cache
+        return self.cache.volume()
 
     def keys(self):
         return list(self)
@@ -70,16 +74,22 @@ class CachedDownloader:
 
 
 def cached(func):
-    def protect(self, key, *args):
+    """
+    If force==True, cache downloader is skipped
+    """
+
+    def protect(self, key, *args, **kwargs):
+
+        is_force = "force" in kwargs and kwargs.pop("force") == True
 
         if not isinstance(key, tuple):
 
             val = self.get(key)
 
-            if val is not None:
+            if val is not None and not is_force:
                 return val
 
-            val = func(self, key, *args)
+            val = func(self, key, *args, **kwargs)
             self.set(key, val)
 
             return val
@@ -93,8 +103,11 @@ def cached(func):
             vals = [self.get(x) for x in key]
 
             # Find a list of the missing items
-            missing_keys = [k for (k, v) in zip(key, vals) if v is None]
-            missing_vals = func(self, missing_keys, is_multi=True, *args)
+            if is_force:
+                missing_keys = key
+            else:
+                missing_keys = [k for (k, v) in zip(key, vals) if v is None]
+            missing_vals = func(self, missing_keys, is_multi=True, *args, **kwargs)
 
             # Add any found values to the cache
             for k, v in missing_vals.items():
@@ -111,6 +124,6 @@ def cached(func):
 class RemoteItemNotFound(Exception):
     """Raised when a requested item is not found on the remote server"""
 
-    def __init__(self, database_name, key):
+    def __init__(self, key, database_name):
         msg = f"{key} not found in {database_name}"
         super().__init__(msg)
