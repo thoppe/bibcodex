@@ -1,18 +1,24 @@
 from Bio import Entrez
-from .helpers import CachedDownloader, cached, RemoteItemNotFound
+from .helpers import CachedDownloader, RemoteItemNotFound
 
 
 class PubMed_downloader(CachedDownloader):
+    """
+    Downloads and caches the raw XML from PubMed.
+    Requires that the input be a non-negative integer.
+    """
 
     name = "pubmed"
     datatype = str
     api_key = ""
 
-    def validate(self, pmid):
-        if not isinstance(pmid, int):
-            raise TypeError(f"{self.name} expected an integer, called with {pmid}")
+    def validate(self, pmid: int):
 
-    def download(self, pmid):
+        if not isinstance(pmid, int) or pmid <= 0:
+            err = f"{self.name} expected an non-negative integer (PMID), called with {pmid}"
+            raise TypeError(err)
+
+    def download(self, pmid: int) -> str:
         # Need custom download, since this uses Bio.Entrez
         self.validate(pmid)
 
@@ -23,10 +29,11 @@ class PubMed_downloader(CachedDownloader):
         Entrez.api_key = PubMed_downloader.api_key
 
         res = Entrez.efetch(db="pubmed", id=[str(pmid)], retmode="xml")
+
         return res.read()
 
-    @cached
-    def __call__(self, pmid):
+    @CachedDownloader.cached
+    def __call__(self, pmid) -> str:
         r = self.download(pmid)
         xml = r.decode()
 
