@@ -2,6 +2,9 @@
 
 requests
 biopython # Entrez (PUBMED)
+pandas
+bs4
+lxml
 
 # Caching
 
@@ -9,5 +12,3 @@ diskcache
 brotlicffi
 
 # CLI logging
-
-wasabi

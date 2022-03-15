@@ -1,5 +1,10 @@
 from Bio import Entrez
+from typing import List, Union, Dict
+
 from .helpers import CachedDownloader, RemoteItemNotFound
+
+import pandas as pd
+from bs4 import BeautifulSoup
 
 
 class PubMed_downloader(CachedDownloader):
@@ -10,9 +15,10 @@ class PubMed_downloader(CachedDownloader):
 
     name = "pubmed"
     datatype = str
+
     api_key = ""
 
-    def download(self, pmid: int) -> str:
+    def download(self, pmids: int) -> str:
         # Need custom download, since this uses Bio.Entrez
 
         # Fill this in for PubMed team
@@ -21,27 +27,31 @@ class PubMed_downloader(CachedDownloader):
         # If this is filled, we can go faster
         Entrez.api_key = PubMed_downloader.api_key
 
-        res = Entrez.efetch(db="pubmed", id=[str(pmid)], retmode="xml")
+        # Call the Entrez downloader
+        res = Entrez.efetch(db="pubmed", id=pmids, retmode="xml")
 
         return res.read()
 
     @CachedDownloader.cached
-    def __call__(self, pmid) -> datatype:
+    def __call__(self, pmids: Union[int, List]) -> Dict[str, datatype]:
 
-        self.validate_pmid(pmid)
+        # Validate the input datatypes
+        [self.validate_pmid(p) for p in pmids]
 
-        xml = self.get_from_pmid(pmid)
+        # Download the raw data
+        xml = self.download(pmids)
 
-        # Entrez returns an empty-ish XML that looks like this
-        if "<PubmedArticleSet></PubmedArticleSet>" in xml:
-            raise RemoteItemNotFound(pmid, self.name)
+        # Parse the returned XML and extract each result
+        soup = BeautifulSoup(xml, "xml")
 
-        return xml
+        data = {}
+        for block in soup.find_all("PubmedArticle"):
+            info = block.PubmedData.ArticleIdList
+            pmid = info.find(attrs={"IdType": "pubmed"})
+            pmid = pmid.get_text().strip()
+            data[pmid] = str(block)
 
-    def get_from_pmid(self, pmid: int) -> datatype:
-        r = self.download(pmid)
-        xml = r.decode()
-        return xml
+        return data
 
 
 downloader = PubMed_downloader()
