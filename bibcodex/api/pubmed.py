@@ -15,6 +15,7 @@ class PubMed_downloader(CachedDownloader):
 
     name = "pubmed"
     datatype = str
+    chunksize = 10
 
     api_key = ""
 

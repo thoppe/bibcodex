@@ -1,3 +1,4 @@
+from typing import List, Union, Dict
 from .helpers import CachedDownloader, RemoteItemNotFound
 
 
@@ -9,32 +10,28 @@ class SemanticScholar_downloader(CachedDownloader):
 
     name = "SemanticScholar"
     datatype = dict
+    chunksize = 1
 
     @CachedDownloader.cached
-    def __call__(self, pmid: int) -> dict:
+    def __call__(self, pmids: Union[int, List]) -> Dict[str, datatype]:
 
-        self.validate_pmid(pmid)
+        # Validate the input datatypes
+        [self.validate_pmid(p) for p in pmids]
 
-        # Custom URL
-        url = (
-            f"http://s2-public-api-prod.us-west-2.elasticbeanstalk.com/"
-            f"v1/paper/"
-            f"PMID:{pmid}?include_unknown_references=true"
-        )
+        if len(pmids) > 1:
+            raise ValueError("Semantic Scholar can not do multi downloads")
+
+        pmid = pmids[0]
 
         # Public facing API
         url = f"https://api.semanticscholar.org/v1/paper/PMID:{pmid}"
 
         r = self.download(url)
 
-        if r.status_code in [
-            404,
-        ]:
-            raise RemoteItemNotFound(pmid, self.name)
+        if r.status_code in [404]:
+            return {}
 
-        js = r.json()
-
-        return js
+        return {str(pmid): r.json()}
 
 
 downloader = SemanticScholar_downloader()

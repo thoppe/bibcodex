@@ -9,9 +9,10 @@ Library to access, analyze, and display bibliographic information. WORK IN PROGR
 - [x] API access: iCite
 - [ ] API access: arXiv
 - [ ] API access: CoLIL
-- [x] API access, forced validation of input
+- [x] API access, validation of input
+- [x] API access, multi item requests
+- [x] API access, chunking
 - [ ] API access, better error handling
-- [ ] API access, multi item requests
 - [ ] API Caching, invalidating
 - [ ] API Caching, in-class domain
 - [ ] Testing harness
@@ -22,6 +23,4 @@ Library to access, analyze, and display bibliographic information. WORK IN PROGR
 - [ ] Clustering
 - [ ] Visualization (streamlit)
 
-
-
-
+Note: fix repeated validation

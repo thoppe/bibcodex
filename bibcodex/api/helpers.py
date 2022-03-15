@@ -14,8 +14,10 @@ class CachedDownloader:
     Can only get/save dictionaries or raw text.
     """
 
+    # These must be set by the derived class
     name = None
     datatype = None
+    chunksize = None
 
     def __init__(self):
         if self.name is None:
@@ -86,6 +88,11 @@ class CachedDownloader:
     def __contains__(self, key):
         return str(key) in self.cache
 
+    def _chunks(self, lst, n):
+        """Yield successive n-sized chunks from lst."""
+        for i in range(0, len(lst), n):
+            yield lst[i : i + n]
+
     def cached(func):
         """
         If force==True, cache downloader is skipped
@@ -106,11 +113,10 @@ class CachedDownloader:
             # Find a list of the missing items and compute them
             mkeys = [k for (k, v) in zip(keys, vals) if v is None]
 
-            # Only call the download function if there are missing keys
-            if mkeys:
-                mvals = func(self, mkeys, *args, **kwargs)
-            else:
-                mvals = []
+            # Call the function in appropriate sized chunks
+            mvals = {}
+            for chunk in self._chunks(mkeys, self.chunksize):
+                mvals.update(func(self, chunk, *args, **kwargs))
 
             # Add any found values to the cache
             for k in mkeys:

@@ -10,6 +10,7 @@ class iCite_downloader(CachedDownloader):
 
     name = "iCite"
     datatype = dict
+    chunksize = 100
 
     @CachedDownloader.cached
     def __call__(self, pmids: Union[int, List]) -> Dict[str, datatype]:
