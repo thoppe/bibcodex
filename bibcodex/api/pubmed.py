@@ -12,15 +12,9 @@ class PubMed_downloader(CachedDownloader):
     datatype = str
     api_key = ""
 
-    def validate(self, pmid: int):
-
-        if not isinstance(pmid, int) or pmid <= 0:
-            err = f"{self.name} expected an non-negative integer (PMID), called with {pmid}"
-            raise TypeError(err)
-
     def download(self, pmid: int) -> str:
         # Need custom download, since this uses Bio.Entrez
-        self.validate(pmid)
+        self.validate_pmid(pmid)
 
         # Fill this in for PubMed team
         Entrez.email = "https://github.com/thoppe/bibcodex"

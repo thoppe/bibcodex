@@ -42,6 +42,13 @@ class CachedDownloader:
     def keys(self):
         return list(self)
 
+    def validate_pmid(self, pmid: int):
+        # Raises a TypeError if pmid is not a non-negative int
+
+        if not isinstance(pmid, int) or pmid <= 0:
+            err = f"{self.name} expected an non-negative integer (PMID), called with {pmid}"
+            raise TypeError(err)
+
     def download(self, url, params=None):
         r = self.sess.get(url, params=params)
 
