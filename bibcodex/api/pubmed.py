@@ -37,8 +37,7 @@ class PubMed_downloader(CachedDownloader):
         return data
 
     @CachedDownloader.cached
-    def __call__(self, pmids: Union[int, List]) -> Dict[str, datatype]:
-
+    def get_from_PMIDs(self, pmids: List[int]) -> Dict[str, datatype]:
         # Validate the input datatypes
         [self.validate_pmid(p) for p in pmids]
 
@@ -60,6 +59,9 @@ class PubMed_downloader(CachedDownloader):
         #    data[pmid] = str(block)
 
         return data
+
+    def __call__(self, pmids: Union[int, List]) -> Dict[str, datatype]:
+        return self.get_from_PMIDs(pmids)
 
 
 downloader = PubMed_downloader()

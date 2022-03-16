@@ -13,7 +13,7 @@ class iCite_downloader(CachedDownloader):
     chunksize = 100
 
     @CachedDownloader.cached
-    def __call__(self, pmids: Union[int, List]) -> Dict[str, datatype]:
+    def get_from_PMIDs(self, pmids: List[int]) -> Dict[str, datatype]:
 
         # Validate the input datatypes
         [self.validate_pmid(p) for p in pmids]
@@ -32,6 +32,9 @@ class iCite_downloader(CachedDownloader):
             data[pmid] = item
 
         return data
+
+    def __call__(self, pmids: Union[int, List]) -> Dict[str, datatype]:
+        return self.get_from_PMIDs(pmids)
 
 
 downloader = iCite_downloader()

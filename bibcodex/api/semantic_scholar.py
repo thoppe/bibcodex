@@ -13,8 +13,7 @@ class SemanticScholar_downloader(CachedDownloader):
     chunksize = 1
 
     @CachedDownloader.cached
-    def __call__(self, pmids: Union[int, List]) -> Dict[str, datatype]:
-
+    def get_from_PMIDs(self, pmids: List[int]) -> Dict[str, datatype]:
         # Validate the input datatypes
         [self.validate_pmid(p) for p in pmids]
 
@@ -32,6 +31,9 @@ class SemanticScholar_downloader(CachedDownloader):
             return {}
 
         return {str(pmid): r.json()}
+
+    def __call__(self, pmids: Union[int, List]) -> Dict[str, datatype]:
+        return self.get_from_PMIDs(pmids)
 
 
 downloader = SemanticScholar_downloader()
