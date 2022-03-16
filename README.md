@@ -5,7 +5,8 @@ Library to access, analyze, and display bibliographic information. WORK IN PROGR
 ## Roadmap
 
 - [x] API access: Pubmed
-- [x] API access: Semantic Scholar
+- [x] API access: Semantic Scholar (PMID)
+- [x] API access: Semantic Scholar (DOI)
 - [x] API access: iCite
 - [ ] API access: arXiv
 - [ ] API access: CoLIL
