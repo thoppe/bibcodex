@@ -5,7 +5,7 @@ from .helpers import CachedDownloader, RemoteItemNotFound
 
 import pandas as pd
 from bs4 import BeautifulSoup
-
+from .pubmed_parser import parse_medline_xml
 
 class PubMed_downloader(CachedDownloader):
     """
@@ -14,7 +14,7 @@ class PubMed_downloader(CachedDownloader):
     """
 
     name = "pubmed"
-    datatype = str
+    datatype = dict
     chunksize = 10
 
     api_key = ""
@@ -27,11 +27,13 @@ class PubMed_downloader(CachedDownloader):
 
         # If this is filled, we can go faster
         Entrez.api_key = PubMed_downloader.api_key
-
+        
         # Call the Entrez downloader
         res = Entrez.efetch(db="pubmed", id=pmids, retmode="xml")
+        xml = res.read().decode()
 
-        return res.read()
+        data = parse_medline_xml(xml)
+        return data
 
     @CachedDownloader.cached
     def __call__(self, pmids: Union[int, List]) -> Dict[str, datatype]:
@@ -40,17 +42,21 @@ class PubMed_downloader(CachedDownloader):
         [self.validate_pmid(p) for p in pmids]
 
         # Download the raw data
-        xml = self.download(pmids)
-
-        # Parse the returned XML and extract each result
-        soup = BeautifulSoup(xml, "xml")
+        result = self.download(pmids)
 
         data = {}
-        for block in soup.find_all("PubmedArticle"):
-            info = block.PubmedData.ArticleIdList
-            pmid = info.find(attrs={"IdType": "pubmed"})
-            pmid = pmid.get_text().strip()
-            data[pmid] = str(block)
+        for item in result:
+            data[item['pmid']] = item
+
+        # OUTDATED, use parse_medline_xml instead now
+        # Parse the returned XML and extract each result
+        # soup = BeautifulSoup(xml, "xml")
+        # data = {}
+        # for block in soup.find_all("PubmedArticle"):
+        #    info = block.PubmedData.ArticleIdList
+        #    pmid = info.find(attrs={"IdType": "pubmed"})
+        #    pmid = pmid.get_text().strip()
+        #    data[pmid] = str(block)
 
         return data
 
