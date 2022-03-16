@@ -33,8 +33,5 @@ class iCite_downloader(CachedDownloader):
 
         return data
 
-    def __call__(self, pmids: Union[int, List]) -> Dict[str, datatype]:
-        return self.get_from_PMIDs(pmids)
-
 
 downloader = iCite_downloader()

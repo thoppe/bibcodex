@@ -4,7 +4,7 @@ import requests
 import pickle
 import logging
 import pandas as pd
-
+from typing import List, Union, Dict
 
 class CachedDownloader:
     """
@@ -87,6 +87,16 @@ class CachedDownloader:
 
     def __contains__(self, key):
         return str(key) in self.cache
+
+    def get_from_PMIDs(self, pmids: List[int]) -> Dict[str, datatype]:
+        raise NotImplementedError(f"Must define get_from_PMIDs for {self.name}")
+
+    def __call__(self, pmids: Union[int, List]) -> Dict[str, datatype]:
+        """
+        Downloads (or pulls from cache) a list of pmids.
+        """
+        result = self.get_from_PMIDs(pmids)
+        return result
 
     def _chunks(self, lst, n):
         """Yield successive n-sized chunks from lst."""

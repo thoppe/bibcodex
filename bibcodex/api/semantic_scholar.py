@@ -32,8 +32,5 @@ class SemanticScholar_downloader(CachedDownloader):
 
         return {str(pmid): r.json()}
 
-    def __call__(self, pmids: Union[int, List]) -> Dict[str, datatype]:
-        return self.get_from_PMIDs(pmids)
-
 
 downloader = SemanticScholar_downloader()
