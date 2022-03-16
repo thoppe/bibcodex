@@ -1,6 +1,9 @@
 """
 Parsers for MEDLINE XML
 """
+
+# flake8: noqa
+
 import re
 import numpy as np
 from itertools import chain
@@ -64,7 +67,11 @@ def parse_doi(pubmed_article):
 
     if len(elocation_ids) > 0:
         for e in elocation_ids:
-            doi = e.text.strip() or "" if e.attrib.get("EIdType", "") == "doi" else ""
+            doi = (
+                e.text.strip() or ""
+                if e.attrib.get("EIdType", "") == "doi"
+                else ""
+            )
     else:
         article_ids = pubmed_article.find("PubmedData/ArticleIdList")
         if article_ids is not None:
@@ -339,23 +346,33 @@ def parse_author_affiliation(medline):
             authors_list = author_list.findall("Author")
             for author in authors_list:
                 if author.find("ForeName") is not None:
-                    forename = (author.find("ForeName").text or "").strip() or ""
+                    forename = (
+                        author.find("ForeName").text or ""
+                    ).strip() or ""
                 else:
                     forename = ""
                 if author.find("Initials") is not None:
-                    initials = (author.find("Initials").text or "").strip() or ""
+                    initials = (
+                        author.find("Initials").text or ""
+                    ).strip() or ""
                 else:
                     initials = ""
                 if author.find("LastName") is not None:
-                    lastname = (author.find("LastName").text or "").strip() or ""
+                    lastname = (
+                        author.find("LastName").text or ""
+                    ).strip() or ""
                 else:
                     lastname = ""
                 if author.find("Identifier") is not None:
-                    identifier = (author.find("Identifier").text or "").strip() or ""
+                    identifier = (
+                        author.find("Identifier").text or ""
+                    ).strip() or ""
                 else:
                     identifier = ""
                 if author.find("AffiliationInfo/Affiliation") is not None:
-                    affiliation = author.find("AffiliationInfo/Affiliation").text or ""
+                    affiliation = (
+                        author.find("AffiliationInfo/Affiliation").text or ""
+                    )
                     affiliation = affiliation.replace(
                         "For a full list of the authors' affiliations please see the Acknowledgements section.",
                         "",
@@ -471,7 +488,9 @@ def parse_references(pubmed_article, reference_list):
     if reference_list:
         return references
     else:
-        references = ";".join([ref["pmid"] for ref in references if ref["pmid"] != ""])
+        references = ";".join(
+            [ref["pmid"] for ref in references if ref["pmid"] != ""]
+        )
         return references
 
 
@@ -559,7 +578,10 @@ def parse_article_info(
             abstract = "\n".join(abstract_list).strip()
         else:
             abstract = (
-                stringify_children(article.find("Abstract/AbstractText")).strip() or ""
+                stringify_children(
+                    article.find("Abstract/AbstractText")
+                ).strip()
+                or ""
             )
     elif article.find("Abstract") is not None:
         abstract = stringify_children(article.find("Abstract")).strip() or ""

@@ -18,7 +18,7 @@ Library to access, analyze, and display bibliographic information. WORK IN PROGR
 - [ ] API Caching, invalidating
 - [ ] API Caching, in-class domain
 - [ ] Testing harness
-- [ ] CI linting
+- [x] CI linting
 - [ ] pypi library
 - [ ] README with examples
 - [ ] Embedding functions (SPECTER)

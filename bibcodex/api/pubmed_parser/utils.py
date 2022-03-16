@@ -1,3 +1,5 @@
+# flake8: noqa
+
 import calendar
 import collections
 
@@ -66,7 +68,10 @@ def stringify_affiliation(node):
         + list(
             chain(
                 *(
-                    [c.text if (c.tag != "label" and c.tag != "sup") else "", c.tail]
+                    [
+                        c.text if (c.tag != "label" and c.tag != "sup") else "",
+                        c.tail,
+                    ]
                     for c in node.getchildren()
                 )
             )

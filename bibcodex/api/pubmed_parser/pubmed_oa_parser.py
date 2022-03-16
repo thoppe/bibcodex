@@ -1,6 +1,9 @@
 """
 Parsers for PubMed XML
 """
+
+# flake8: noqa
+
 import os
 from lxml import etree
 from itertools import chain
@@ -49,7 +52,9 @@ def zip_author(author):
     and return the output in
         [[first_name, last_name, key1], [first_name, last_name, key2]] instead
     """
-    author_zipped = list(zip([[author[0], author[1]]] * len(author[-1]), author[-1]))
+    author_zipped = list(
+        zip([[author[0], author[1]]] * len(author[-1]), author[-1])
+    )
     return list(map(lambda x: x[0] + [x[-1]], author_zipped))
 
 
@@ -76,7 +81,12 @@ def parse_article_meta(tree):
     pub_id = pub_id_node.text if pub_id_node is not None else ""
     doi = doi_node.text if doi_node is not None else ""
 
-    dict_article_meta = {"pmid": pmid, "pmc": pmc, "doi": doi, "publisher_id": pub_id}
+    dict_article_meta = {
+        "pmid": pmid,
+        "pmc": pmc,
+        "doi": doi,
+        "publisher_id": pub_id,
+    }
 
     return dict_article_meta
 
@@ -185,7 +195,9 @@ def parse_pubmed_xml(path, include_path=False, nxml=False):
         name = stringify_affiliation_rec(e)
         name = name.strip().replace("\n", " ")
         affil_name_list.append(name)
-    affiliation_list = [[idx, name] for idx, name in zip(affil_id, affil_name_list)]
+    affiliation_list = [
+        [idx, name] for idx, name in zip(affil_id, affil_name_list)
+    ]
 
     tree_author = tree.xpath('.//contrib-group/contrib[@contrib-type="author"]')
     author_list = list()
@@ -270,16 +282,21 @@ def parse_pubmed_references(path):
                 names = list()
                 if ref.find("name") is not None:
                     for n in ref.findall("name"):
-                        name = " ".join([t.text or "" for t in n.getchildren()][::-1])
+                        name = " ".join(
+                            [t.text or "" for t in n.getchildren()][::-1]
+                        )
                         names.append(name)
                 elif ref.find("person-group") is not None:
                     for n in ref.find("person-group"):
                         name = " ".join(
-                            n.xpath("given-names/text()") + n.xpath("surname/text()")
+                            n.xpath("given-names/text()")
+                            + n.xpath("surname/text()")
                         )
                         names.append(name)
                 if ref.find("article-title") is not None:
-                    article_title = stringify_children(ref.find("article-title")) or ""
+                    article_title = (
+                        stringify_children(ref.find("article-title")) or ""
+                    )
                     article_title = article_title.replace("\n", " ").strip()
                 else:
 

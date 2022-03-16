@@ -6,6 +6,7 @@ import logging
 import pandas as pd
 from typing import List, Union, Dict
 
+
 class CachedDownloader:
     """
     Virtual class to cache downloads. Subclass for each data source.
@@ -49,7 +50,10 @@ class CachedDownloader:
         # Raises a TypeError if pmid is not a non-negative int
 
         if not pd.api.types.is_integer(pmid) or pmid <= 0:
-            err = f"{self.name} expected an non-negative integer for a PMID, called with {pmid}"
+            err = (
+                f"{self.name} expected an non-negative integer for a PMID, "
+                f"called with {pmid}"
+            )
             raise TypeError(err)
 
     def download(self, url, params=None):
@@ -57,7 +61,9 @@ class CachedDownloader:
         self.logger.info(f"Downloading {r.url}")
 
         if not r.ok:
-            self.logger.error(f"Request failed with status code {r.status_code}")
+            self.logger.error(
+                f"Request failed with status code {r.status_code}"
+            )
 
         return r
 
@@ -79,7 +85,9 @@ class CachedDownloader:
         key = str(key)
 
         if not isinstance(val, self.datatype) and val is not None:
-            raise KeyError(f"{self.name} can only cache {self.datatype} objects")
+            raise KeyError(
+                f"{self.name} can only cache {self.datatype} objects"
+            )
 
         val = pickle.dumps(val)
         val = brotlicffi.compress(val)
@@ -88,8 +96,8 @@ class CachedDownloader:
     def __contains__(self, key):
         return str(key) in self.cache
 
-    def get_from_PMIDs(self, pmids: List[int]) -> Dict[str, datatype]:
-        raise NotImplementedError(f"Must define get_from_PMIDs for {self.name}")
+    def get_from_PMIDs(self):
+        raise NotImplementedError(f"Must define this func for {self.name}")
 
     def __call__(self, pmids: Union[int, List]) -> Dict[str, datatype]:
         """
@@ -108,7 +116,9 @@ class CachedDownloader:
         If force==True, cache downloader is skipped
         """
 
-        def protect(self, keys, force=False, raise_on_missing=False, *args, **kwargs):
+        def protect(
+            self, keys, force=False, raise_on_missing=False, *args, **kwargs
+        ):
 
             # If a key is passed, turn it into a list
             if not pd.api.types.is_list_like(keys):
@@ -137,7 +147,9 @@ class CachedDownloader:
 
                 self.set(k, mvals[str(k)])
 
-            vals = [mvals[str(k)] if v is None else v for k, v in zip(keys, vals)]
+            vals = [
+                mvals[str(k)] if v is None else v for k, v in zip(keys, vals)
+            ]
 
             return vals
 

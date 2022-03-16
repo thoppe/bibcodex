@@ -1,3 +1,5 @@
+# flake8: noqa
+
 import sys
 import re
 import time
@@ -73,11 +75,15 @@ def parse_pubmed_web_tree(tree):
     abstract = " ".join([stringify_children(a).strip() for a in abstract_tree])
 
     if len(tree.xpath("//article//title")) != 0:
-        journal = ";".join([t.text.strip() for t in tree.xpath("//article//title")])
+        journal = ";".join(
+            [t.text.strip() for t in tree.xpath("//article//title")]
+        )
     else:
         journal = ""
 
-    pubdate = tree.xpath('//pubmeddata//history//pubmedpubdate[@pubstatus="medline"]')
+    pubdate = tree.xpath(
+        '//pubmeddata//history//pubmedpubdate[@pubstatus="medline"]'
+    )
     pubdatebook = tree.xpath(
         '//pubmedbookdata//history//pubmedpubdate[@pubstatus="medline"]'
     )
@@ -99,9 +105,15 @@ def parse_pubmed_web_tree(tree):
     if authors_tree is not None:
         for a in authors_tree:
             firstname = (
-                a.find("forename").text if a.find("forename") is not None else ""
+                a.find("forename").text
+                if a.find("forename") is not None
+                else ""
             )
-            lastname = a.find("lastname").text if a.find("forename") is not None else ""
+            lastname = (
+                a.find("lastname").text
+                if a.find("forename") is not None
+                else ""
+            )
             fullname = (firstname + " " + lastname).strip()
             if fullname == "":
                 fullname = (
@@ -212,7 +224,9 @@ def extract_citations(tree):
         Number of citations that an article get until parsed date. If no citations found, return 0
     """
     citations_text = tree.xpath('//form/h2[@class="head"]/text()')[0]
-    n_citations = re.sub("Is Cited by the Following ", "", citations_text).split(" ")[0]
+    n_citations = re.sub(
+        "Is Cited by the Following ", "", citations_text
+    ).split(" ")[0]
     try:
         n_citations = int(n_citations)
     except:
@@ -334,21 +348,21 @@ def parse_citation_web(doc_id, id_type="PMC"):
     n_pages = int(n_citations / 30) + 1
 
     pmc_cited_all = list()  # all PMC cited
-    citations = tree.xpath('//div[@class="rprt"]/div[@class="title"]/a/@href')[1::]
+    citations = tree.xpath('//div[@class="rprt"]/div[@class="title"]/a/@href')[
+        1::
+    ]
     pmc_cited = list(map(extract_pmc, citations))
     pmc_cited_all.extend(pmc_cited)
     if n_pages >= 2:
         for i in range(2, n_pages + 1):
-            link = (
-                "http://www.ncbi.nlm.nih.gov/pmc/articles/{}/citedby/?page={}".format(
-                    pmc, i
-                )
+            link = "http://www.ncbi.nlm.nih.gov/pmc/articles/{}/citedby/?page={}".format(
+                pmc, i
             )
             page = requests.get(link)
             tree = html.fromstring(page.content)
-            citations = tree.xpath('//div[@class="rprt"]/div[@class="title"]/a/@href')[
-                1::
-            ]
+            citations = tree.xpath(
+                '//div[@class="rprt"]/div[@class="title"]/a/@href'
+            )[1::]
             pmc_cited = list(map(extract_pmc, citations))
             pmc_cited_all.extend(pmc_cited)
     pmc_cited_all = [p for p in pmc_cited_all if p is not pmc]

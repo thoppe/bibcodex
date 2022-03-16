@@ -1,6 +1,5 @@
 from Bio import Entrez
-from typing import List, Union, Dict
-import pandas as pd
+from typing import List, Dict
 
 # from bs4 import BeautifulSoup
 

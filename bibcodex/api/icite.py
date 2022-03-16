@@ -1,4 +1,4 @@
-from typing import List, Union, Dict
+from typing import List, Dict
 from .helpers import CachedDownloader
 
 
