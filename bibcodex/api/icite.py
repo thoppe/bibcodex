@@ -1,5 +1,5 @@
 from typing import List, Union, Dict
-from .helpers import CachedDownloader, RemoteItemNotFound
+from .helpers import CachedDownloader
 
 
 class iCite_downloader(CachedDownloader):
