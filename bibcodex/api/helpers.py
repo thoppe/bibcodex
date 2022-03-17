@@ -49,12 +49,21 @@ class CachedDownloader:
     def validate_pmid(self, pmid: int):
         # Raises a TypeError if pmid is not a non-negative int
 
-        if not pd.api.types.is_integer(pmid) or pmid <= 0:
-            err = (
-                f"{self.name} expected an non-negative integer for a PMID, "
-                f"called with {pmid}"
-            )
+        err = (
+            f"{self.name} expected an non-negative integer for a PMID, "
+            f"called with {pmid}"
+        )
+
+        if isinstance(pmid, str):
+            try:
+                pmid = int(pmid)
+            except (ValueError, TypeError):
+                raise TypeError(err)
+
+        if not pd.api.types.is_number(pmid) or pmid <= 0:
             raise TypeError(err)
+
+        return True
 
     def download(self, url, params=None):
         r = self.sess.get(url, params=params)
@@ -103,6 +112,10 @@ class CachedDownloader:
         """
         Downloads (or pulls from cache) a list of pmids.
         """
+        if pmids is not None:
+            # Validate the input datatypes and cast to int (if say floats)
+            pmids = [int(p) for p in pmids if self.validate_pmid(p)]
+
         result = self.get_from_PMIDs(pmids)
         return result
 

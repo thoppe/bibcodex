@@ -15,9 +15,6 @@ class iCite_downloader(CachedDownloader):
     @CachedDownloader.cached
     def get_from_PMIDs(self, pmids: List[int]) -> Dict[str, datatype]:
 
-        # Validate the input datatypes
-        [self.validate_pmid(p) for p in pmids]
-
         str_pmids = ",".join(map(str, pmids))
         url = f"https://icite.od.nih.gov/api/pubs?pmids={str_pmids}"
 

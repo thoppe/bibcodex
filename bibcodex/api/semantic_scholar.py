@@ -14,8 +14,6 @@ class SemanticScholar_downloader(CachedDownloader):
 
     @CachedDownloader.cached
     def get_from_PMIDs(self, pmids: List[int]) -> Dict[str, datatype]:
-        # Validate the input datatypes
-        [self.validate_pmid(p) for p in pmids]
 
         if len(pmids) > 1:
             raise ValueError("Semantic Scholar can not do multi downloads")

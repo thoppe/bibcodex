@@ -19,7 +19,7 @@ class PubMed_downloader(CachedDownloader):
 
     api_key = ""
 
-    def download(self, pmids: int) -> str:
+    def download(self, pmids: List[int]) -> str:
         # Need custom download, since this uses Bio.Entrez
 
         # Fill this in for PubMed team
@@ -37,9 +37,6 @@ class PubMed_downloader(CachedDownloader):
 
     @CachedDownloader.cached
     def get_from_PMIDs(self, pmids: List[int]) -> Dict[str, datatype]:
-        # Validate the input datatypes
-        [self.validate_pmid(p) for p in pmids]
-
         # Download the raw data
         result = self.download(pmids)
 
