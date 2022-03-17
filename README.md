@@ -17,6 +17,7 @@ Library to access, analyze, and display bibliographic information. WORK IN PROGR
 - [ ] API access, better error handling
 - [ ] API Caching, invalidating
 - [ ] API Caching, in-class domain
+- [x] Codex, build dataframe from items
 - [ ] Testing harness
 - [x] CI linting
 - [ ] pypi library

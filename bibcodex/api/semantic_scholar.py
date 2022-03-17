@@ -28,7 +28,12 @@ class SemanticScholar_downloader(CachedDownloader):
         if r.status_code in [404]:
             return {}
 
-        return {str(pmid): r.json()}
+        results = r.json()
+
+        # Add in the pmid as Semantic Scholar doesn't return it
+        results["pmid"] = pmid
+
+        return {str(pmid): results}
 
 
 downloader = SemanticScholar_downloader()
