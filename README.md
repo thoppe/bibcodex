@@ -7,7 +7,7 @@ Library to access, analyze, and display bibliographic information. WORK IN PROGR
 - [x] API access: Pubmed (Parsed MEDLINE data)
 - [x] API access: Semantic Scholar (PMID)
 - [x] API access: iCite
-- [ ] API access: Semantic Scholar (DOI)
+- [x] API access: Semantic Scholar (DOI)
 - [ ] API access: Pubmed (XML)
 - [ ] API access: arXiv
 - [ ] API access: CoLIL

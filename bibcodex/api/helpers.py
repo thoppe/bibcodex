@@ -108,15 +108,26 @@ class CachedDownloader:
     def get_from_PMIDs(self):
         raise NotImplementedError(f"Must define this func for {self.name}")
 
-    def __call__(self, pmids: Union[int, List]) -> Dict[str, datatype]:
+    def get_from_DOIs(self):
+        raise NotImplementedError(f"Must define this func for {self.name}")
+
+    def __call__(
+        self, records: Union[int, List], method="pmid"
+    ) -> Dict[str, datatype]:
         """
         Downloads (or pulls from cache) a list of pmids.
         """
-        if pmids is not None:
-            # Validate the input datatypes and cast to int (if say floats)
-            pmids = [int(p) for p in pmids if self.validate_pmid(p)]
+        if method == "pmid":
+            if records is not None:
+                # Validate the input datatypes and cast to int (if say floats)
+                records = [int(p) for p in records if self.validate_pmid(p)]
 
-        result = self.get_from_PMIDs(pmids)
+            result = self.get_from_PMIDs(records)
+
+        elif method == "doi":
+            result = self.get_from_DOIs(records)
+        else:
+            raise NotImplementedError("method must be one of [pmid, doi]")
         return result
 
     def _chunks(self, lst, n):

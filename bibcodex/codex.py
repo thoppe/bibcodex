@@ -35,7 +35,8 @@ class Codex(pd.DataFrame):
             }
 
             if api not in methods:
-                raise NotImplementedError(f"{method} not implemented for {api}")
+                err = f"{method} not implemented for {api}"
+                raise NotImplementedError(err)
 
             # Call the API
             data = methods[api](pmids=records)
