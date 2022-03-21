@@ -7,7 +7,7 @@ class Codex(pd.DataFrame):
         self, method="pmid", api="pubmed", add_prefix=True, add_suffix=False
     ):
 
-        etypes = ["pmid"]
+        etypes = ["pmid", "doi"]
         if method not in etypes:
             raise NotImplementedError(f"enrich method must be one of {etypes}")
 
@@ -18,12 +18,19 @@ class Codex(pd.DataFrame):
         if method not in self:
             raise ValueError(f"Method column {method} not in codex")
 
-        # Convert method column to string representation or None
-        self[method] = [
-            str(int(x)) if not pd.isnull(x) else None for x in self["pmid"]
-        ]
+        # Only collect data for the records that are not empty
+        records = self[method].dropna()
 
-        if method == "pmid":
+        if method == "doi":
+            methods = {
+                "semantic_scholar": semantic_scholar,
+            }
+
+        elif method == "pmid":
+            # Convert method column to string representation or None
+            self[method] = [
+                str(int(x)) if not pd.isnull(x) else None for x in self[method]
+            ]
 
             # Only collect data for the records that are not empty
             records = self[method].dropna()
@@ -34,25 +41,30 @@ class Codex(pd.DataFrame):
                 "semantic_scholar": semantic_scholar,
             }
 
-            if api not in methods:
-                err = f"{method} not implemented for {api}"
-                raise NotImplementedError(err)
+        # Check if the API has the method implemented
+        if api not in methods:
+            err = f"{method} not implemented for {api}"
+            raise NotImplementedError(err)
 
-            # Call the API
-            data = methods[api](pmids=records)
+        # Call the API
+        data = methods[api](records, method=method)
 
-            # Cast the index to string
-            data = pd.DataFrame(data)
-            data[method] = data[method].astype(str)
-            data = data.set_index(method)
+        # Cast the index to string
+        data = pd.DataFrame(data)
+        data[method] = data[method].astype(str)
+        data = data.set_index(method)
 
-            if add_prefix:
-                data = data.add_prefix(f"{api}_")
+        if add_prefix:
+            data = data.add_prefix(f"{api}_")
 
-            if add_suffix:
-                data = data.add_suffix(f"_{api}")
+        if add_suffix:
+            data = data.add_suffix(f"_{api}")
 
-            df = self.set_index(method).join(data)
-            self = Codex(df)
+        # Merge the results together
+        df = self.set_index(method).combine_first(data).reset_index()
 
+        # Make sure we return a codex object
+        self = Codex(df)
+
+        # Return self to help chaining
         return self
