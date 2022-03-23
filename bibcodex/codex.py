@@ -1,9 +1,16 @@
 import pandas as pd
+from typing import Dict
 from .api import pubmed, semanticScholar, icite
 
 
 class Codex(pd.DataFrame):
-    def validate(self):
+
+    # Reuse the components across all Codex instances
+    pubmed = pubmed
+    semanticScholar = semanticScholar
+    icite = icite
+
+    def validate(self) -> Dict:
         """
         Returns information about the number of valid PMIDs and DOIs
         """
@@ -33,26 +40,26 @@ class Codex(pd.DataFrame):
         }
 
     @property
-    def invalid_doi(self):
+    def invalid_doi(self) -> pd.Series:
         """
         Returns a boolean series which marks invalid DOIs
         Missing values are considered invalid.
         """
-        return ~self["doi"].apply(pubmed.check_doi)
+        return ~self["doi"].apply(self.pubmed.check_doi)
 
     @property
-    def invalid_pmid(self):
+    def invalid_pmid(self) -> pd.Series:
         """
         Returns a boolean series which marks invalid PMIDs
         Missing values are considered invalid.
         """
-        return ~self["pmid"].apply(pubmed.check_pmid)
+        return ~self["pmid"].apply(self.pubmed.check_pmid)
 
     def set_api_key(self, api: str, key: str) -> None:
 
         API = {
-            "pubmed": pubmed,
-            "semanticScholar": semanticScholar,
+            "pubmed": self.pubmed,
+            "semanticScholar": self.semanticScholar,
         }
 
         if api not in API:
@@ -60,6 +67,13 @@ class Codex(pd.DataFrame):
             raise NotImplementedError(err)
 
         API[api].api_key = key
+
+    def clear_cache(self) -> None:
+        """
+        Clears the cache for all databases.
+        """
+        for api in [self.pubmed, self.semanticScholar, self.icite]:
+            api.clear()
 
     def enrich(
         self, method="pmid", api="pubmed", add_prefix=True, add_suffix=False
@@ -85,8 +99,8 @@ class Codex(pd.DataFrame):
         records = self[method].dropna()
 
         if method == "doi":
-            methods = {
-                "semanticScholar": semanticScholar,
+            API = {
+                "semanticScholar": self.semanticScholar,
             }
 
         elif method == "pmid":
@@ -98,19 +112,19 @@ class Codex(pd.DataFrame):
             # Only collect data for the records that are not empty
             records = self[method].dropna()
 
-            methods = {
-                "pubmed": pubmed,
-                "icite": icite,
-                "semanticScholar": semanticScholar,
+            API = {
+                "pubmed": self.pubmed,
+                "icite": self.icite,
+                "semanticScholar": self.semanticScholar,
             }
 
         # Check if the API has the method implemented
-        if api not in methods:
+        if api not in API:
             err = f"{method} not implemented for {api}"
             raise NotImplementedError(err)
 
         # Call the API
-        data = methods[api](records, method=method)
+        data = API[api](records, method=method)
 
         # Cast the index to string
         data = pd.DataFrame(data)
