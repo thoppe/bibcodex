@@ -14,9 +14,12 @@ Library to access, analyze, and display bibliographic information. WORK IN PROGR
 - [x] API access, validation of input
 - [x] API access, multi item requests
 - [x] API access, chunking
+- [ ] API access, include status_code in download results 
 - [ ] API access, better error handling
-- [ ] API Caching, invalidating
-- [ ] API Caching, in-class domain
+- [ ] API caching, clearing
+- [ ] API caching, in-class domain (what did I mean here??)
+- [x] Codex, validate PMID
+- [ ] Codex, validate DOI
 - [x] Codex, build dataframe from items
 - [ ] Testing harness
 - [x] CI linting
@@ -25,5 +28,6 @@ Library to access, analyze, and display bibliographic information. WORK IN PROGR
 - [ ] Embedding functions (SPECTER)
 - [ ] Clustering
 - [ ] Visualization (streamlit)
+
 
 Note: fix repeated validation

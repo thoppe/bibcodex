@@ -11,7 +11,7 @@ class SemanticScholar_downloader(CachedDownloader):
     https://www.semanticscholar.org/product/api#Fetch-Paper
     """
 
-    name = "SemanticScholar"
+    name = "semanticScholar"
     datatype = dict
     chunksize = 1
 
@@ -21,8 +21,13 @@ class SemanticScholar_downloader(CachedDownloader):
             raise ValueError("Semantic Scholar can not do multi downloads")
 
         record = str(records[0])
+        headers = {}
 
-        r = self.download(url + record)
+        # Apply the API if it exists
+        if self.api_key:
+            headers["x-api-key"] = self.api_key
+
+        r = self.download(url + record, headers=headers)
 
         if r.status_code in [404]:
             return {}

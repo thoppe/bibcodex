@@ -1,17 +1,60 @@
 import pandas as pd
-from .api import pubmed, semantic_scholar, icite
+from .api import pubmed, semanticScholar, icite
 
 
 class Codex(pd.DataFrame):
+    def validate(self):
+        """
+        Returns information about the number of valid PMIDs and DOIs
+        """
+        if "pmid" in self:
+            idx = self["pmid"].notnull()
+            n_pmid = sum(idx)
+            n_pmid_valid = sum(map(pubmed.check_pmid, self["pmid"]))
+
+        else:
+            n_pmid = n_pmid_valid = 0
+
+        if "doi" in self:
+            n_doi = sum(self["doi"].notnull())
+        else:
+            n_doi = n_doi_valid = 0
+
+        return {
+            "n_rows": len(self),
+            "n_pmid": n_pmid,
+            "n_pmid_valid": n_pmid_valid,
+            "n_doi": n_doi,
+            "n_doi_valid": n_doi_valid,
+        }
+
+    def set_api_key(self, api: str, key: str) -> None:
+
+        API = {
+            "pubmed": pubmed,
+            "semanticScholar": semanticScholar,
+        }
+
+        if api not in API:
+            err = f"API key not implemented for {api}"
+            raise NotImplementedError(err)
+
+        API[api].api_key = key
+
     def enrich(
         self, method="pmid", api="pubmed", add_prefix=True, add_suffix=False
     ):
+
+        """
+        Downloads (or pulls from the cache) data from an API (e.g. PubMed)
+        and returns a Codex dataframe.
+        """
 
         etypes = ["pmid", "doi"]
         if method not in etypes:
             raise NotImplementedError(f"enrich method must be one of {etypes}")
 
-        atypes = ["pubmed", "icite", "semantic_scholar"]
+        atypes = ["pubmed", "icite", "semanticScholar"]
         if api not in atypes:
             raise NotImplementedError(f"enrich API must be one of {atypes}")
 
@@ -23,7 +66,7 @@ class Codex(pd.DataFrame):
 
         if method == "doi":
             methods = {
-                "semantic_scholar": semantic_scholar,
+                "semanticScholar": semanticScholar,
             }
 
         elif method == "pmid":
@@ -38,7 +81,7 @@ class Codex(pd.DataFrame):
             methods = {
                 "pubmed": pubmed,
                 "icite": icite,
-                "semantic_scholar": semantic_scholar,
+                "semanticScholar": semanticScholar,
             }
 
         # Check if the API has the method implemented

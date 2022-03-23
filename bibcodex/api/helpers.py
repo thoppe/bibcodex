@@ -19,6 +19,7 @@ class CachedDownloader:
     name = None
     datatype = None
     chunksize = None
+    api_key = ""
 
     def __init__(self):
         if self.name is None:
@@ -60,13 +61,36 @@ class CachedDownloader:
             except (ValueError, TypeError):
                 raise TypeError(err)
 
-        if not pd.api.types.is_number(pmid) or pmid <= 0:
+        if (not pd.api.types.is_number(pmid)) or pmid <= 0 or pd.isnull(pmid):
             raise TypeError(err)
 
         return True
 
-    def download(self, url, params=None):
-        r = self.sess.get(url, params=params)
+    def check_pmid(self, pmid: int) -> bool:
+        # Returns True/False if the PMID is valid, does not raise an exception
+        try:
+            self.validate_pmid(pmid)
+        except (TypeError, ValueError):
+            return False
+        return True
+
+    def validate_doi(self, doi: str):
+        # Raises a TypeError if doi doesn't match standard
+
+        if not isinstance(doi, str):
+            raise TypeError("Expect DOIs to be string data type")
+
+        # FIX
+        err = (
+            f"{self.name} expected an non-negative integer for a PMID, "
+            f"called with {doi}"
+        )
+
+        if len(doi) < 3 or not doi.startswith("10."):
+            raise TypeError(err)
+
+    def download(self, url, params=None, headers=None):
+        r = self.sess.get(url, params=params, headers=headers)
         self.logger.info(f"Downloading {r.url}")
 
         if not r.ok:
@@ -115,7 +139,7 @@ class CachedDownloader:
         self, records: Union[int, List], method="pmid"
     ) -> Dict[str, datatype]:
         """
-        Downloads (or pulls from cache) a list of pmids.
+        Downloads (or pulls from cache) a list of pmids or DOIs.
         """
         if method == "pmid":
             if records is not None:

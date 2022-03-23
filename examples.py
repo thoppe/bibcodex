@@ -1,5 +1,5 @@
 import pandas as pd
-from bibcodex.api import pubmed, semantic_scholar, icite
+from bibcodex.api import pubmed, semanticScholar, icite
 
 
 p1 = 27034526
@@ -17,6 +17,6 @@ print(pubmed([p0, p1]))
 
 # Semantic Scholar returns *very* detialed information, but API has limited requests
 # bibcodex caches previous results so only one API call is needed
-print(semantic_scholar(p0))
+print(semanticScholar(p0))
 
 # [{'abstract': 'Topic choice is a previously unappreciated contributor to the lower rate of NIH awards to AA/B scientists. Despite efforts to promote diversity in the biomedical workforce, there remains a lower rate of funding of National Institutes of Health R01 applications submitted by African-American/black (AA/B) scientists relative to white scientists. To identify underlying causes of this funding gap, we analyzed six stages of the application process from 2011 to 2015 and found that disparate outcomes arise at three of the six: decision to discuss, impact score assignment, and a previously unstudied stage, topic choice. Notably, AA/B applicants tend to propose research on topics with lower award rates. These topics include research at the community and population level, as opposed to more fundamental and mechanistic investigations; the latter tend to have higher award rates. Topic choice alone accounts for over 20% of the funding gap after controlling for multiple variables, including the applicant’s prior achievements. Our findings can be used to inform interventions designed to close the funding gap.', 'arxivId': None, 'authors': [{'authorId': '47000911', 'name': 'Travis Hoppe', 'url': 'https://www.semanticscholar.org/author/47000911'}, {'authorId': '5518590',

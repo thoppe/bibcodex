@@ -1,5 +1,5 @@
 from .pubmed import downloader as pubmed
-from .semantic_scholar import downloader as semantic_scholar
+from .semantic_scholar import downloader as semanticScholar
 from .icite import downloader as icite
 
-__all__ = [pubmed, semantic_scholar, icite]
+__all__ = [pubmed, semanticScholar, icite]
