@@ -89,6 +89,14 @@ class CachedDownloader:
         if len(doi) < 3 or not doi.startswith("10."):
             raise TypeError(err)
 
+    def check_doi(self, doi: str) -> bool:
+        # Returns True/False if the DOI is valid, does not raise an exception
+        try:
+            self.validate_doi(doi)
+        except (TypeError, ValueError):
+            return False
+        return True
+
     def download(self, url, params=None, headers=None):
         r = self.sess.get(url, params=params, headers=headers)
         self.logger.info(f"Downloading {r.url}")

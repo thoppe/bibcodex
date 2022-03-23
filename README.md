@@ -19,7 +19,7 @@ Library to access, analyze, and display bibliographic information. WORK IN PROGR
 - [ ] API caching, clearing
 - [ ] API caching, in-class domain (what did I mean here??)
 - [x] Codex, validate PMID
-- [ ] Codex, validate DOI
+- [x] Codex, validate DOI
 - [x] Codex, build dataframe from items
 - [ ] Testing harness
 - [x] CI linting

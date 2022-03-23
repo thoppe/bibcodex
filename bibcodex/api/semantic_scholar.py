@@ -23,7 +23,7 @@ class SemanticScholar_downloader(CachedDownloader):
         record = str(records[0])
         headers = {}
 
-        # Apply the API if it exists
+        # Only apply the API key if it exists
         if self.api_key:
             headers["x-api-key"] = self.api_key
 

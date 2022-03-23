@@ -8,25 +8,45 @@ class Codex(pd.DataFrame):
         Returns information about the number of valid PMIDs and DOIs
         """
         if "pmid" in self:
-            idx = self["pmid"].notnull()
-            n_pmid = sum(idx)
-            n_pmid_valid = sum(map(pubmed.check_pmid, self["pmid"]))
+            n_pmid = sum(self["pmid"].notnull())
+            n_pmid_missing = len(self) - n_pmid
+            n_pmid_invalid = sum(self.invalid_pmid)
 
         else:
-            n_pmid = n_pmid_valid = 0
+            n_pmid = n_pmid_invalid = n_pmid_invalid = 0
 
         if "doi" in self:
             n_doi = sum(self["doi"].notnull())
+            n_doi_missing = len(self) - n_doi
+            n_doi_invalid = sum(self.invalid_doi)
         else:
-            n_doi = n_doi_valid = 0
+            n_doi = n_doi_missing = n_doi_invalid = 0
 
         return {
             "n_rows": len(self),
             "n_pmid": n_pmid,
-            "n_pmid_valid": n_pmid_valid,
+            "n_pmid_missing": n_pmid_missing,
+            "n_pmid_invalid": n_pmid_invalid - n_pmid_missing,
             "n_doi": n_doi,
-            "n_doi_valid": n_doi_valid,
+            "n_doi_missing": n_doi_missing,
+            "n_doi_invalid": n_doi_invalid - n_doi_missing,
         }
+
+    @property
+    def invalid_doi(self):
+        """
+        Returns a boolean series which marks invalid DOIs
+        Missing values are considered invalid.
+        """
+        return ~self["doi"].apply(pubmed.check_doi)
+
+    @property
+    def invalid_pmid(self):
+        """
+        Returns a boolean series which marks invalid PMIDs
+        Missing values are considered invalid.
+        """
+        return ~self["pmid"].apply(pubmed.check_pmid)
 
     def set_api_key(self, api: str, key: str) -> None:
 
