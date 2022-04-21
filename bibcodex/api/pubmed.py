@@ -1,8 +1,6 @@
 from Bio import Entrez
 from typing import List, Dict
 
-# from bs4 import BeautifulSoup
-
 from .helpers import CachedDownloader
 from .pubmed_parser import parse_medline_xml
 

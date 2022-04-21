@@ -8,10 +8,10 @@ Library to access, analyze, and display bibliographic information. WORK IN PROGR
 - [x] API access: Semantic Scholar (PMID)
 - [x] API access: iCite
 - [x] API access: Semantic Scholar (DOI)
+- [x] API access: DOI to PMID NLM www.ncbi.nlm.nih.gov/pmc/tools/idconv/
 - [ ] API access: Pubmed (XML)
 - [ ] API access: arXiv
 - [ ] API access: CoLIL
-- [ ] API access: DOI to PMID NLM www.ncbi.nlm.nih.gov/pmc/tools/idconv/
 - [x] API access, validation of input
 - [x] API access, multi item requests
 - [x] API access, chunking

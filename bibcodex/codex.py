@@ -1,6 +1,6 @@
 import pandas as pd
 from typing import Dict
-from .api import pubmed, semanticScholar, icite
+from .api import pubmed, semanticScholar, icite, idConverter
 
 
 class Codex(pd.DataFrame):
@@ -9,6 +9,7 @@ class Codex(pd.DataFrame):
     pubmed = pubmed
     semanticScholar = semanticScholar
     icite = icite
+    idConverter = idConverter
 
     def validate(self) -> Dict:
         """
@@ -72,7 +73,8 @@ class Codex(pd.DataFrame):
         """
         Clears the cache for all databases.
         """
-        for api in [self.pubmed, self.semanticScholar, self.icite]:
+        API = [self.pubmed, self.semanticScholar, self.icite, self.idConverter]
+        for api in API:
             api.clear()
 
     def enrich(
@@ -88,7 +90,7 @@ class Codex(pd.DataFrame):
         if method not in etypes:
             raise NotImplementedError(f"enrich method must be one of {etypes}")
 
-        atypes = ["pubmed", "icite", "semanticScholar"]
+        atypes = ["pubmed", "icite", "semanticScholar", "idConverter"]
         if api not in atypes:
             raise NotImplementedError(f"enrich API must be one of {atypes}")
 
@@ -101,6 +103,7 @@ class Codex(pd.DataFrame):
         if method == "doi":
             API = {
                 "semanticScholar": self.semanticScholar,
+                "idConverter": self.idConverter,
             }
 
         elif method == "pmid":
