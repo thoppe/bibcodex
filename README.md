@@ -1,6 +1,28 @@
 # bibcodex
 
-Library to access, analyze, and display bibliographic information. WORK IN PROGRESS.
+Library to access, analyze, and display bibliographic information.
+__ 🚧 WORK IN PROGRESS 🚧 __
+
+## Examples
+
+Import the `pandas` and `bibcodex` together:
+```python
+import bibcodex
+import pandas as pd
+
+df = pd.read_csv("data/sample_data.csv", dtype={'pmid':str})
+```
+
+You should always cast your search variables (pmid, doi) to str.
+
+```python
+df = df.set_index("doi")
+
+info = df.codex.download("doi2pmid")
+print(df.combine_first(info[["pmid"]]))
+```
+
+
 
 ## Roadmap
 
@@ -24,11 +46,9 @@ Library to access, analyze, and display bibliographic information. WORK IN PROGR
 - [x] Codex, build dataframe from items
 - [ ] Testing harness
 - [x] CI linting
-- [ ] pypi library
+- [ ] pypi library (poetry?)
 - [ ] README with examples
 - [ ] Embedding functions (SPECTER)
 - [ ] Clustering
 - [ ] Visualization (streamlit)
 
-
-Note: fix repeated validation

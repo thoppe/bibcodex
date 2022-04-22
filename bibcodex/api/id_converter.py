@@ -6,7 +6,7 @@ from .helpers import CachedDownloader
 # https://www.ncbi.nlm.nih.gov/pmc/utils/idconv/v1.0/?tool=my_tool&email=my_email@example.com&ids=PMC3531190,PMC3245039
 
 
-class DOI_IdConverter_downloader(CachedDownloader):
+class PMC_IdConverter_downloader(CachedDownloader):
     """
     Downloads and caches output from ID Converter converting DOIs to PMIDs.
     https://www.ncbi.nlm.nih.gov/pmc/tools/id-converter-api/
@@ -38,4 +38,4 @@ class DOI_IdConverter_downloader(CachedDownloader):
         return data
 
 
-downloader = DOI_IdConverter_downloader()
+downloader = PMC_IdConverter_downloader()

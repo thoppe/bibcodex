@@ -210,11 +210,3 @@ class CachedDownloader:
             return vals
 
         return protect
-
-
-# Outdated, to be removed
-# class RemoteItemNotFound(Exception):
-#    """Raised when a requested item is not found on the remote server"""
-#    def __init__(self, key, database_name):
-#        msg = f"{key} not found in {database_name}"
-#        super().__init__(msg)

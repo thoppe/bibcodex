@@ -30,7 +30,7 @@ class SemanticScholar_downloader(CachedDownloader):
         r = self.download(url + record, headers=headers)
 
         if r.status_code in [404]:
-            return {}
+            return {}, record
 
         return r.json(), record
 
