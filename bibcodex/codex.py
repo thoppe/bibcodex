@@ -3,7 +3,8 @@ from typing import Dict
 from .api import pubmed, semanticScholar, icite, idConverter
 
 
-class Codex(pd.DataFrame):
+@pd.api.extensions.register_dataframe_accessor("codex")
+class Codex:
 
     # Reuse the components across all Codex instances
     pubmed = pubmed
@@ -11,27 +12,45 @@ class Codex(pd.DataFrame):
     icite = icite
     idConverter = idConverter
 
+    def __init__(self, df):
+        # Validation can happen here if needed
+        self.df = df
+        pass
+
+    def clear(self) -> None:
+        """
+        Clears the cache for all databases.
+        """
+        API = [self.pubmed, self.semanticScholar, self.icite, self.idConverter]
+
+        for api in API:
+            api.clear()
+
     def validate(self) -> Dict:
         """
         Returns information about the number of valid PMIDs and DOIs
         """
-        if "pmid" in self:
-            n_pmid = sum(self["pmid"].notnull())
-            n_pmid_missing = len(self) - n_pmid
-            n_pmid_invalid = sum(self.invalid_pmid)
+        n = len(self.df)
+
+        if "pmid" in self.df:
+            invalid_pmid = self.df["pmid"].notnull()
+            n_pmid = sum(~invalid_pmid)
+            n_pmid_missing = n - n_pmid
+            n_pmid_invalid = sum(invalid_pmid)
 
         else:
-            n_pmid = n_pmid_invalid = n_pmid_invalid = 0
+            n_pmid = n_pmid_missing = n_pmid_invalid = 0
 
-        if "doi" in self:
-            n_doi = sum(self["doi"].notnull())
-            n_doi_missing = len(self) - n_doi
-            n_doi_invalid = sum(self.invalid_doi)
+        if "doi" in self.df:
+            invalid_doi = self.df["doi"].notnull()
+            n_doi = sum(~invalid_doi)
+            n_doi_missing = n - n_doi
+            n_doi_invalid = sum(invalid_doi)
         else:
             n_doi = n_doi_missing = n_doi_invalid = 0
 
         return {
-            "n_rows": len(self),
+            "n_rows": n,
             "n_pmid": n_pmid,
             "n_pmid_missing": n_pmid_missing,
             "n_pmid_invalid": n_pmid_invalid - n_pmid_missing,
@@ -142,16 +161,8 @@ class Codex(pd.DataFrame):
         return self
 
 
+"""
 def read_csv(*args, **kwargs) -> Codex:
     # Wrap read_csv so Codex can call it directly
     return Codex(pd.read_csv(*args, **kwargs))
-
-
-def clear() -> None:
-    """
-    Clears the cache for all databases.
-    """
-    API = [pubmed, semanticScholar, icite, idConverter]
-
-    for api in API:
-        api.clear()
+"""

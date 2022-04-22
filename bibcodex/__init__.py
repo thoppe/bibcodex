@@ -1,3 +1,3 @@
-from .codex import Codex, read_csv, clear
+from .codex import Codex
 
-__all__ = [Codex, read_csv, clear]
+__all__ = [Codex]
