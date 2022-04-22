@@ -20,6 +20,7 @@ Valid download methods are: `icite`, `doi2pmid`, 'semanticScholar`, or `pubmed`:
 # Set the index to search query
 df = df.set_index("doi")
 
+# Download the information, and combine it with the original dataframe:
 info = df.codex.download('semanticScholar')
 print(df.combine_first(info[["title"]]))
 
@@ -30,6 +31,12 @@ doi                      title
 10.1001/jama.2018.0708   Association Between Estimated Cumulative Vacci...
 10.1001/jama.2018.10488  Electronic Cigarette Sales in the United State...
 """
+```
+
+All search queries are cached locally in `./cache`. To clear the cache use:
+
+```python
+df.codex.clear()
 ```
 
 
