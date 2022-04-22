@@ -42,10 +42,10 @@ df.codex.clear()
 
 | API  | Returned fields |
 | ------------- | ------------- |
-| `pubmed`           | title issue pages abstract journal authors pubdate mesh_terms publication_types chemical_list keywords doi references delete languages vernacular_title affiliations pmc other_id medline_ta nlm_unique_id issn_linking country  |
-| `semanticScholar`  | abstract arxivId authors citationVelocity citations corpusId fieldsOfStudy influentialCitationCount isOpenAccess isPublisherLicensed is_open_access is_publisher_licensed numCitedBy numCiting paperId references s2FieldsOfStudy title topics url venue year  |
-| `icite`            | year title authors journal is_research_article relative_citation_ratio nih_percentile human animal molecular_cellular apt is_clinical citation_count citations_per_year expected_citations_per_year field_citation_rate provisional x_coord y_coord cited_by_clin cited_by references doi  |
-| `doi2pmid`         | live status errmsg pmcid pmid versions  |
+| [`pubmed`](https://www.ncbi.nlm.nih.gov/home/develop/api/) | title, issue, pages, abstract, journal, authors, pubdate, mesh_terms, publication_types, chemical_list, keywords, doi, references, delete, languages, vernacular_title, affiliations, pmc, other_id, medline_ta, nlm_unique_id, issn_linking, country  |
+| [`semanticScholar`](https://www.semanticscholar.org/product/api#Fetch-Paper)  | abstract, arxivId, authors, citationVelocity, citations, corpusId, fieldsOfStudy, influentialCitationCount, isOpenAccess, isPublisherLicensed, is_open_access, is_publisher_licensed, numCitedBy, numCiting, paperId, references, s2FieldsOfStudy, title, topics, url, venue, year  |
+| [`icite`](https://icite.od.nih.gov/api) | year, title, authors, journal, is_research_article, relative_citation_ratio, nih_percentile, human, animal, molecular_cellular, apt, is_clinical, citation_count, citations_per_year, expected_citations_per_year, field_citation_rate, provisional, x_coord, y_coord, cited_by_clin, cited_by, references, doi  |
+| [`doi2pmid`](https://www.ncbi.nlm.nih.gov/pmc/utils/idconv/v1.0) | live, status, errmsg, pmcid, pmid, versions  |
 
 
 
