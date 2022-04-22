@@ -69,14 +69,6 @@ class Codex(pd.DataFrame):
 
         API[api].api_key = key
 
-    def clear_cache(self) -> None:
-        """
-        Clears the cache for all databases.
-        """
-        API = [self.pubmed, self.semanticScholar, self.icite, self.idConverter]
-        for api in API:
-            api.clear()
-
     def enrich(
         self, method="pmid", api="pubmed", add_prefix=True, add_suffix=False
     ):
@@ -148,3 +140,18 @@ class Codex(pd.DataFrame):
 
         # Return self to help chaining
         return self
+
+
+def read_csv(*args, **kwargs) -> Codex:
+    # Wrap read_csv so Codex can call it directly
+    return Codex(pd.read_csv(*args, **kwargs))
+
+
+def clear() -> None:
+    """
+    Clears the cache for all databases.
+    """
+    API = [pubmed, semanticScholar, icite, idConverter]
+
+    for api in API:
+        api.clear()
