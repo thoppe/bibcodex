@@ -1,7 +1,7 @@
 # bibcodex
+_🚧 WORK IN PROGRESS 🚧_
 
-Library to access, analyze, and display bibliographic information.
-__ 🚧 WORK IN PROGRESS 🚧 __
+Library to access, analyze, and display bibliographic information. 
 
 ## Examples
 
@@ -14,9 +14,10 @@ import pandas as pd
 df = pd.read_csv("data/sample_data.csv", dtype={'pmid':str})
 ```
 
-# Set the index over the search and use one of `icite`, `doi2pmid`, 'semanticScholar`, or `pubmed`:
+Valid download methods are: `icite`, `doi2pmid`, 'semanticScholar`, or `pubmed`:
 
 ```python
+# Set the index to search query
 df = df.set_index("doi")
 
 info = df.codex.download('semanticScholar')
@@ -30,7 +31,6 @@ doi                      title
 10.1001/jama.2018.10488  Electronic Cigarette Sales in the United State...
 """
 ```
-
 
 
 ## Roadmap
@@ -56,7 +56,7 @@ doi                      title
 - [ ] Testing harness
 - [x] CI linting
 - [ ] pypi library (poetry?)
-- [ ] README with examples
+- [x] README with examples
 - [ ] Embedding functions (SPECTER)
 - [ ] Clustering
 - [ ] Visualization (streamlit)
