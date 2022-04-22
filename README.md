@@ -5,21 +5,30 @@ __ 🚧 WORK IN PROGRESS 🚧 __
 
 ## Examples
 
-Import the `pandas` and `bibcodex` together:
+Import the `pandas` and `bibcodex` together and load a dataframe:
 ```python
 import bibcodex
 import pandas as pd
 
+# You should always cast your search variables (pmid, doi) to str.
 df = pd.read_csv("data/sample_data.csv", dtype={'pmid':str})
 ```
 
-You should always cast your search variables (pmid, doi) to str.
+# Set the index over the search and use one of `icite`, `doi2pmid`, 'semanticScholar`, or `pubmed`:
 
 ```python
 df = df.set_index("doi")
 
-info = df.codex.download("doi2pmid")
-print(df.combine_first(info[["pmid"]]))
+info = df.codex.download('semanticScholar')
+print(df.combine_first(info[["title"]]))
+
+"""
+doi                      title                                                           
+10.1001/jama.2017.18444  Progressive Massive Fibrosis in Coal Miners Fr...
+10.1001/jama.2018.0126   Birth Defects Potentially Related to Zika Viru...
+10.1001/jama.2018.0708   Association Between Estimated Cumulative Vacci...
+10.1001/jama.2018.10488  Electronic Cigarette Sales in the United State...
+"""
 ```
 
 
