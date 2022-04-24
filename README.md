@@ -70,9 +70,10 @@ df.codex.clear()
 - [x] Codex, validate PMID
 - [x] Codex, validate DOI
 - [x] Codex, build dataframe from items
-- [ ] Testing harness
-- [x] CI linting
-- [ ] pypi library (poetry?)
+- [x] Testing harness
+- [ ] Full testing coverage
+- [x] Code linting
+- [ ] pypi library
 - [x] README with examples
 - [ ] Embedding functions (SPECTER)
 - [ ] Clustering

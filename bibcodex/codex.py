@@ -101,6 +101,10 @@ class Codex:
         valid_methods = ["doi", "pmid"]
         df = self.df
 
+        if df.index.name is None:
+            msg = f"Index not set, should be one of {valid_methods}"
+            raise TypeError(msg)
+
         if not pd.api.types.is_string_dtype(df.index):
             msg = f"Index of type is {method} is not a string (and should be!)"
             raise TypeError(msg)
