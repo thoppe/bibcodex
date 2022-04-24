@@ -15,11 +15,18 @@ sample_PMIDs = [
     "29509866",
 ]
 
+sample_titles = [
+    "Progressive Massive Fibrosis in Coal Miners From 3 Clinics in Virginia",
+    "Birth Defects Potentially Related to Zika Virus Infection During Pregnancy in the United States",
+    "Association Between Estimated Cumulative Vaccine Antigen Exposure Through the First 23 Months of Life and Non–Vaccine-Targeted Infections From 24 Through 47 Months of Age",
+]
+
 
 def fixture_sample_dataframe():
     df = pd.DataFrame()
     df["doi"] = sample_DOIs
     df["pmid"] = sample_PMIDs
+    df["title"] = sample_titles
     return df
 
 
@@ -57,6 +64,34 @@ def test_icite_with_pmid():
 
     info = df.bibcodex.download("icite")
     assert (info["doi"] == df["doi"]).all()
+
+
+def test_semanticScholar_with_pmid():
+    """
+    Resolve publications from Semantic Scholar using PMIDs.
+    Due to API restrictions, only check one value.
+    Check if DOIs match known value.
+    """
+    df = fixture_sample_dataframe().set_index("pmid")[:1]
+    df.bibcodex.clear()
+
+    info = df.bibcodex.download("semanticScholar")
+    assert (info["doi"] == df["doi"]).all()
+
+
+def test_semanticScholar_with_doi():
+    """
+    Resolve publications from Semantic Scholar using DOIs.
+    Due to API restrictions, only check one value.
+
+    Semantic Scholar does not return PMIDs
+    so check if title matches known value.
+    """
+    df = fixture_sample_dataframe().set_index("doi")[:1]
+    df.bibcodex.clear()
+
+    info = df.bibcodex.download("semanticScholar")
+    assert (info["title"] == df["title"]).all()
 
 
 """
