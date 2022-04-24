@@ -69,14 +69,14 @@ df.codex.clear()
 - [x] API access, chunking
 - [ ] API access, include status_code in download results 
 - [ ] API access, better error handling
-- [ ] API caching, clearing
+- [x] API caching, clearing
 - [x] Codex, validate PMID
 - [x] Codex, validate DOI
 - [x] Codex, build dataframe from items
 - [x] Testing harness
 - [ ] Full testing coverage
 - [x] Code linting
-- [ ] pypi library
+- [x] pypi library
 - [x] README with examples
 - [ ] Embedding functions (SPECTER)
 - [ ] Clustering
@@ -85,5 +85,5 @@ df.codex.clear()
 
 ## Development
 
-Built with ❤️by [@metasemantic](https://twitter.com/metasemantic). Package is linted by [black](https://github.com/psf/black) and conforms to standards by [flake8](https://github.com/PyCQA/flake8). Pull requests accepted, but please provide tests with full coverage for new code.
+Built with ❤ ️by [@metasemantic](https://twitter.com/metasemantic). Package is linted by [black](https://github.com/psf/black) and conforms to standards by [flake8](https://github.com/PyCQA/flake8). Pull requests accepted, but please provide tests with full coverage for new code.
 
