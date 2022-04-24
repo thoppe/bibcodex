@@ -4,6 +4,7 @@ import requests
 import pickle
 import logging
 import pandas as pd
+from tqdm import tqdm
 from typing import List, Union, Dict
 
 
@@ -164,7 +165,7 @@ class CachedDownloader:
 
     def _chunks(self, lst, n):
         """Yield successive n-sized chunks from lst."""
-        for i in range(0, len(lst), n):
+        for i in tqdm(range(0, len(lst), n)):
             yield lst[i : i + n]
 
     def cached(func):

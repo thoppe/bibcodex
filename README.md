@@ -78,6 +78,7 @@ df.codex.clear()
 - [x] Code linting
 - [x] pypi library
 - [x] README with examples
+- [ ] Status bar for long downloads
 - [ ] Embedding functions (SPECTER)
 - [ ] Clustering
 - [ ] Visualization (streamlit)
