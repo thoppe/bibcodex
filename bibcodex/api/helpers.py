@@ -56,6 +56,9 @@ class CachedDownloader:
             f"called with {pmid}"
         )
 
+        if not isinstance(pmid, str):
+            raise TypeError("Expect PMIDs to be string data type")
+
         if isinstance(pmid, str):
             try:
                 pmid = int(pmid)
@@ -81,9 +84,8 @@ class CachedDownloader:
         if not isinstance(doi, str):
             raise TypeError("Expect DOIs to be string data type")
 
-        # FIX
         err = (
-            f"{self.name} expected an non-negative integer for a PMID, "
+            f"{self.name} expected an DOI to start with 10."
             f"called with {doi}"
         )
 
@@ -165,7 +167,7 @@ class CachedDownloader:
 
     def _chunks(self, lst, n):
         """Yield successive n-sized chunks from lst."""
-        for i in tqdm(range(0, len(lst), n)):
+        for i in tqdm(range(0, len(lst), n), disable=len(lst)==0):
             yield lst[i : i + n]
 
     def cached(func):

@@ -35,19 +35,16 @@ class Codex:
         n = len(df)
 
         if "pmid" in df:
-            invalid_pmid = df["pmid"].notnull()
-            n_pmid = sum(~invalid_pmid)
+            n_pmid = (~df["pmid"].isnull()).sum()
             n_pmid_missing = n - n_pmid
-            n_pmid_invalid = sum(invalid_pmid)
-
+            n_pmid_invalid = n_pmid - self.valid_pmid_idx().sum()
         else:
             n_pmid = n_pmid_missing = n_pmid_invalid = 0
 
         if "doi" in df:
-            invalid_doi = df["doi"].notnull()
-            n_doi = sum(~invalid_doi)
+            n_doi = (~df["doi"].isnull()).sum()
             n_doi_missing = n - n_doi
-            n_doi_invalid = sum(invalid_doi)
+            n_doi_invalid = n_doi - self.valid_doi_idx().sum()
         else:
             n_doi = n_doi_missing = n_doi_invalid = 0
 
@@ -55,27 +52,25 @@ class Codex:
             "n_rows": n,
             "n_pmid": n_pmid,
             "n_pmid_missing": n_pmid_missing,
-            "n_pmid_invalid": n_pmid_invalid - n_pmid_missing,
+            "n_pmid_invalid": n_pmid_invalid,
             "n_doi": n_doi,
             "n_doi_missing": n_doi_missing,
-            "n_doi_invalid": n_doi_invalid - n_doi_missing,
+            "n_doi_invalid": n_doi_invalid,
         }
 
-    @property
-    def invalid_doi(self) -> pd.Series:
+    def valid_doi_idx(self) -> pd.Series:
         """
         Returns a boolean series which marks invalid DOIs
         Missing values are considered invalid.
         """
-        return ~self.df["doi"].apply(self.pubmed.check_doi)
+        return self.df["doi"].apply(self.pubmed.check_doi)
 
-    @property
-    def invalid_pmid(self) -> pd.Series:
+    def valid_pmid_idx(self) -> pd.Series:
         """
         Returns a boolean series which marks invalid PMIDs
         Missing values are considered invalid.
         """
-        return ~self.df["pmid"].apply(self.pubmed.check_pmid)
+        return self.df["pmid"].apply(self.pubmed.check_pmid)
 
     def set_api_key(self, api: str, key: str) -> None:
 
