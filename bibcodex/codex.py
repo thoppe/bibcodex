@@ -3,7 +3,7 @@ from typing import Dict
 from .api import pubmed, semanticScholar, icite, doi2pmid
 
 
-@pd.api.extensions.register_dataframe_accessor("codex")
+@pd.api.extensions.register_dataframe_accessor("bibcodex")
 class Codex:
 
     # Reuse the components across all Codex instances

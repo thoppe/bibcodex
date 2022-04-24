@@ -29,9 +29,9 @@ def test_doi2pmid_with_doi():
     Check that they match known values.
     """
     df = fixture_sample_dataframe().set_index("doi")
-    df.codex.clear()
+    df.bibcodex.clear()
 
-    info = df.codex.download("doi2pmid")
+    info = df.bibcodex.download("doi2pmid")
     assert (info["pmid"] == df["pmid"]).all()
 
 
