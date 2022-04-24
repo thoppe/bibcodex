@@ -1,10 +1,11 @@
 package_name = bibcodex
+coverage_omit="*/pubmed_parser*"
 
 test:
 	python -m pytest -s tests/
 
 coverage:
-	coverage run --source=$(package_name) -m pytest tests/
+	coverage run --omit=$(coverage_omit) --source=$(package_name) -m pytest tests/
 	coverage report -m
 	coverage html
 	xdg-open htmlcov/index.html

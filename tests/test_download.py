@@ -35,6 +35,30 @@ def test_doi2pmid_with_doi():
     assert (info["pmid"] == df["pmid"]).all()
 
 
+def test_pubmed_with_pmid():
+    """
+    Resolve publications from PubMed.
+    Check if DOIs match known values.
+    """
+    df = fixture_sample_dataframe().set_index("pmid")
+    df.bibcodex.clear()
+
+    info = df.bibcodex.download("pubmed")
+    assert (info["doi"] == df["doi"]).all()
+
+
+def test_icite_with_pmid():
+    """
+    Resolve publications from iCite.
+    Check if DOIs match known values.
+    """
+    df = fixture_sample_dataframe().set_index("pmid")
+    df.bibcodex.clear()
+
+    info = df.bibcodex.download("icite")
+    assert (info["doi"] == df["doi"]).all()
+
+
 """
 Old test for reference
 @given(st.integers())
