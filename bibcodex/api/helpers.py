@@ -167,7 +167,7 @@ class CachedDownloader:
 
     def _chunks(self, lst, n):
         """Yield successive n-sized chunks from lst."""
-        for i in tqdm(range(0, len(lst), n), disable=len(lst)==0):
+        for i in tqdm(range(0, len(lst), n), disable=len(lst) == 0):
             yield lst[i : i + n]
 
     def cached(func):

@@ -110,7 +110,7 @@ class Codex:
 
         atypes = ["pubmed", "icite", "semanticScholar", "doi2pmid"]
         if api not in atypes:
-            raise NotImplementedError(f"enrich API must be one of {atypes}")
+            raise NotImplementedError(f"API must be one of {atypes}")
 
         # Only collect data for the unique records that are not empty
         records = df.index.dropna().unique()
