@@ -139,8 +139,49 @@ def test_validation_PMID(sample_bibcodex):
     assert info["n_pmid_missing"] == 1
 
 
-def test_invalid_API():
+def test_index_name_not_set():
     df = pd.DataFrame()
 
     with pytest.raises(TypeError):
-        df.bibcodex.download("NOT A REAL API")
+        df.bibcodex.download("pubmed")
+
+
+def test_int_index_dtype():
+    df = pd.DataFrame()
+    df["pmid"] = [2, 3, 4]
+    df = df.set_index("pmid")
+
+    with pytest.raises(TypeError):
+        df.bibcodex.download("pubmed")
+
+
+def test_wrong_index_name():
+    df = pd.DataFrame()
+    df["title"] = ["foo"]
+    df = df.set_index("title")
+
+    with pytest.raises(TypeError):
+        df.bibcodex.download("pubmed")
+
+
+def test_invalid_API(sample_bibcodex):
+
+    df = sample_bibcodex.set_index("pmid")
+
+    with pytest.raises(NotImplementedError):
+        df.bibcodex.download("NOT_REAL")
+
+
+def test_invalid_method_for_API(sample_bibcodex):
+    """
+    Try to use PMIDs on the doi2pmid method.
+    SHould raise NotImplementedError
+    """
+
+    # Only keep the valid pmids
+    df = sample_bibcodex
+    idx = df.bibcodex.valid_pmid_idx()
+    df = df[idx].set_index("pmid")
+
+    with pytest.raises(NotImplementedError):
+        df.bibcodex.download("doi2pmid")
