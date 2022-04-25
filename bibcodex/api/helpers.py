@@ -115,7 +115,7 @@ class CachedDownloader:
         key = str(key)
 
         if key in self.cache:
-            self.logger.info(f"CACHE HIT: {key}")
+            self.logger.info(f"CACHE HIT: {key[:100]}")
             val = self.cache[key]
             val = brotlicffi.decompress(val)
             val = pickle.loads(val)
@@ -124,7 +124,7 @@ class CachedDownloader:
         return None
 
     def set(self, key, val):
-        self.logger.info(f"CACHE SET: {key}")
+        self.logger.info(f"CACHE SET: {key[:100]}")
 
         key = str(key)
 
@@ -195,7 +195,8 @@ class CachedDownloader:
             # Call the function in appropriate sized chunks
             mvals = {}
             for chunk in self._chunks(mkeys, self.chunksize):
-                mvals.update(func(self, chunk, *args, **kwargs))
+                result = func(self, chunk, *args, **kwargs)
+                mvals.update(result)
 
             # Add any found values to the cache
             for k in mkeys:

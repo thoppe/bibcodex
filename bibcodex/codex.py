@@ -1,6 +1,6 @@
 import pandas as pd
 from typing import Dict
-from .api import pubmed, semanticScholar, icite, doi2pmid
+from .api import pubmed, semanticScholar, icite, doi2pmid, embed
 
 
 @pd.api.extensions.register_dataframe_accessor("bibcodex")
@@ -11,6 +11,7 @@ class Codex:
     semanticScholar = semanticScholar
     icite = icite
     doi2pmid = doi2pmid
+    embed = embed
 
     def __init__(self, df):
         # Validation can happen here if needed
@@ -153,43 +154,3 @@ class Codex:
             data = data.add_suffix(f"_{api}")
 
         return data
-
-    def embed(self, model_name="allenai/specter"):
-        """
-        Base model https://huggingface.co/allenai/spectre
-        """
-
-        # Require that title and abstract are present in the data
-        for key in ["title", "abstract"]:
-            if key not in self.df:
-                raise ValueError(f"Embed requires {key} to be in dataframe")
-
-        # Lazy import of the transformer model since it's expensive
-        from transformers import AutoTokenizer, AutoModel
-
-        tokenizer = AutoTokenizer.from_pretrained("allenai/specter")
-        model = AutoModel.from_pretrained("allenai/specter")
-
-        df = self.df
-        text = (
-            df["title"].astype(str)
-            + tokenizer.sep_token
-            + df["abstract"].astype(str)
-        )
-
-        tokens = tokenizer(
-            text.tolist(),
-            padding=True,
-            truncation=True,
-            return_tensors="pt",
-            max_length=512,
-        )
-
-        result = model(**tokens)
-
-        # TO DO HERE ...
-        # Use pipeline instead of AutoModel?
-        # Fix to use cuda?
-        # Cache results?
-
-        print(result)
