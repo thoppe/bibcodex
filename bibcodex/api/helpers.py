@@ -124,9 +124,9 @@ class CachedDownloader:
         return None
 
     def set(self, key, val):
-        self.logger.info(f"CACHE SET: {key[:100]}")
-
         key = str(key)
+
+        self.logger.info(f"CACHE SET: {key[:100]}")
 
         if not isinstance(val, self.datatype) and val is not None:
             raise KeyError(
