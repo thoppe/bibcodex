@@ -1,6 +1,7 @@
 import pandas as pd
+import numpy as np
 from typing import Dict
-from .api import pubmed, semanticScholar, icite, doi2pmid, embed
+from .api import pubmed, semanticScholar, icite, doi2pmid, hfembed
 
 
 @pd.api.extensions.register_dataframe_accessor("bibcodex")
@@ -11,7 +12,7 @@ class Codex:
     semanticScholar = semanticScholar
     icite = icite
     doi2pmid = doi2pmid
-    embed = embed
+    hfembed = hfembed
 
     def __init__(self, df):
         # Validation can happen here if needed
@@ -22,7 +23,7 @@ class Codex:
         """
         Clears the cache for all databases.
         """
-        API = [pubmed, semanticScholar, icite, doi2pmid]
+        API = [pubmed, semanticScholar, icite, doi2pmid, hfembed]
 
         for api in API:
             api.clear()
@@ -86,7 +87,7 @@ class Codex:
 
         API[api].api_key = key
 
-    def download(self, api="pubmed", add_prefix=False, add_suffix=False):
+    def download(self, api="pubmed"):
 
         """
         Downloads (or pulls from the cache) data from an API (e.g. PubMed).
@@ -147,10 +148,43 @@ class Codex:
         data[method] = data[method].astype(str)
         data = data.set_index(method)
 
-        if add_prefix:
-            data = data.add_prefix(f"{api}_")
-
-        if add_suffix:
-            data = data.add_suffix(f"_{api}")
-
         return data
+
+    def embed(self):
+
+        df = self.df
+        text_columns = ["title", "abstract"]
+
+        # Validate that both the title and abstract exist
+        for col in text_columns:
+            if col not in df:
+                raise KeyError(f"{col} column must be present to embed")
+
+        # Validate that the title and abstract are both strings
+        for col in text_columns:
+            dtype = pd.api.types.infer_dtype(df[col])
+            if dtype != "string":
+                raise KeyError(f"{col} column must fully be a string to embed")
+
+        # Validate that there are no null values
+        for col in text_columns:
+            if df[col].isnull().any():
+                raise ValueError(f"{col} has null values")
+
+        # Validate there are no missing titles
+        n_missing_titles = df["title"].eq("")
+        if n_missing_titles.any():
+            raise ValueError(f"Missing {n_missing_titles.sum()} titles")
+
+        # Warn if missing abstracts
+        n_missing_abstracts = df["abstract"].eq("")
+        if n_missing_abstracts.any():
+            msg = f"Missing {n_missing_abstracts.sum()} abstracts"
+            self.hfembed.logger.warn(msg)
+
+        text = (df["title"] + self.hfembed.sep_token + df["abstract"]).tolist()
+        vecs = self.hfembed.get_from_text(text)
+
+        assert len(vecs) == len(text)
+
+        return np.array(vecs)

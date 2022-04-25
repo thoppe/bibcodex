@@ -18,6 +18,7 @@ class HF_transformer(CachedDownloader):
         self.model = None
         self.tokenizer = None
         self.model_name = "allenai/specter"
+        self.sep_token = " [SEP] "
 
         # Set device on GPU if available, else CPU
         self.device = torch.device(
@@ -45,6 +46,10 @@ class HF_transformer(CachedDownloader):
         self,
         text: List[str],
     ) -> Dict[str, datatype]:
+        """
+        Most models expect the input text to be of the form:
+        [TITLE] [tokenizer.sep_token] [ABSTRACT]
+        """
 
         self._load_model()
 
