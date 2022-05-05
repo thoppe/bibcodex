@@ -19,6 +19,24 @@ author_email = "travis.hoppe+{package_name}@gmail.com"
 
 license_name = "CC-SA"
 
+INSTALL_REQUIRES = [
+    "requests",
+    "biopython",
+    "pandas",
+    "lxml",
+    "unidecode",
+    "tqdm",
+    "diskcache",
+    "brotlicffi",
+]
+
+EXTRAS_REQUIRE = {
+    "NLP": [
+        "transformers",
+    ]
+}
+
+
 with open("README.md") as FIN:
     long_description = FIN.read()
 
@@ -38,7 +56,8 @@ setuptools.setup(
     author_email=author_email,
     # Choose your license
     license=license_name,
-    install_requires=[],
+    install_requires=INSTALL_REQUIRES,
+    extras_require=EXTRAS_REQUIRE,
     classifiers=[
         # How mature is this project? Common values are
         #   3 - Alpha
@@ -52,7 +71,6 @@ setuptools.setup(
         "Topic :: Database",
         "Topic :: Office/Business",
         "Topic :: Scientific/Engineering",
-        
         # Specify the Python versions you support here. In particular, ensure
         # that you indicate whether you support Python 2, Python 3 or both.
         "Programming Language :: Python :: 3",

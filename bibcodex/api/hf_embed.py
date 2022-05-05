@@ -1,6 +1,5 @@
 from typing import List, Dict
 import numpy as np
-import torch
 from .helpers import CachedDownloader
 
 
@@ -20,18 +19,19 @@ class HF_transformer(CachedDownloader):
         self.model_name = "allenai/specter"
         self.sep_token = " [SEP] "
 
-        # Set device on GPU if available, else CPU
-        self.device = torch.device(
-            "cuda" if torch.cuda.is_available() else "cpu"
-        )
-
         super().__init__()
 
     def _load_model(self):
         # Lazy import of the transformer model since it's expensive
 
         if self.model is None:
+            import torch
             from transformers import AutoTokenizer, AutoModel
+
+            # Set device on GPU if available, else CPU
+            self.device = torch.device(
+                "cuda" if torch.cuda.is_available() else "cpu"
+            )
 
             name = self.model_name
 

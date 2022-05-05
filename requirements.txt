@@ -19,4 +19,7 @@ tqdm
 diskcache
 brotlicffi
 
-# CLI logging
+# NLP
+
+transformers
+ 
