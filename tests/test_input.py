@@ -185,3 +185,16 @@ def test_invalid_method_for_API(sample_bibcodex):
 
     with pytest.raises(NotImplementedError):
         df.bibcodex.download("doi2pmid")
+
+
+def test_empty_dataframe():
+    """
+    Create an empty dataframe and make sure it returns an empty result with
+    the right index name.
+    """
+
+    df = pd.DataFrame()
+    df.index.name = "pmid"
+    info = df.bibcodex.download("pubmed")
+
+    assert info.index.name == "pmid"

@@ -27,5 +27,5 @@ dist_production:
 	python setup.py sdist
 	twine upload dist/*
 
-bump_version:
+version_bump:
 	emacs bibcodex/_version.py

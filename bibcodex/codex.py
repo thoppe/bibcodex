@@ -143,10 +143,16 @@ class Codex:
         # Drop fully missing values
         data = [row for row in data if row]
 
-        # Cast the index to string
+        # Cast to a dataframe
         data = pd.DataFrame(data)
-        data[method] = data[method].astype(str)
-        data = data.set_index(method)
+
+        # If there are results, cast the index to string and set index
+        if len(data):
+            data[method] = data[method].astype(str)
+            data = data.set_index(method)
+        else:
+            # Otherwise just set the index name
+            data.index.name = method
 
         return data
 
