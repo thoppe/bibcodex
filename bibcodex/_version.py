@@ -1,6 +1,7 @@
-__version__ = "1.1.4"
+__version__ = "1.1.5"
 
 """
+Version 1.1.5: Fix, cache between chunks error on missing key
 Version 1.1.4: Cache between chunks
 Version 1.1.3: Fix empty dataframe bug.
 Version 1.1.2: Lazy load in torch to keep NLP portion separate

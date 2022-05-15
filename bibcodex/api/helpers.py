@@ -201,9 +201,9 @@ class CachedDownloader:
                 mvals.update(result)
 
                 # Add any found values to the cache
-                for k in result:
+                for k in chunk:
 
-                    if str(k) not in mvals:
+                    if str(k) not in result:
                         logging.warning(f"{k} not found in {self.name}")
                         mvals[str(k)] = self.datatype()
 
