@@ -196,16 +196,18 @@ class CachedDownloader:
             mvals = {}
             for chunk in self._chunks(mkeys, self.chunksize):
                 result = func(self, chunk, *args, **kwargs)
+
+                # Tally up the result
                 mvals.update(result)
 
-            # Add any found values to the cache
-            for k in mkeys:
+                # Add any found values to the cache
+                for k in result:
 
-                if str(k) not in mvals:
-                    logging.warning(f"{k} not found in {self.name}")
-                    mvals[str(k)] = self.datatype()
+                    if str(k) not in mvals:
+                        logging.warning(f"{k} not found in {self.name}")
+                        mvals[str(k)] = self.datatype()
 
-                self.set(k, mvals[str(k)])
+                    self.set(k, mvals[str(k)])
 
             vals = [
                 mvals[str(k)] if v is None else v for k, v in zip(keys, vals)
