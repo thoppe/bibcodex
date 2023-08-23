@@ -25,7 +25,7 @@ Valid download methods are: `icite`, `doi2pmid`, `semanticScholar`, or `pubmed`:
 df = df.set_index("doi")
 
 # Download the information, and combine it with the original dataframe:
-info = df.codex.download('semanticScholar')
+info = df.bibcodex.download('semanticScholar')
 print(df.combine_first(info[["title"]]))
 
 """
