@@ -13,7 +13,7 @@ class PubMed_downloader(CachedDownloader):
 
     name = "pubmed"
     datatype = dict
-    chunksize = 10
+    chunksize = 50
 
     def download(self, pmids: List[int]) -> str:
         # Need custom download, since this uses Bio.Entrez

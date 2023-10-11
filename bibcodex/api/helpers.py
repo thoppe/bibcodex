@@ -27,7 +27,10 @@ class CachedDownloader:
             raise KeyError("Must set name in subclass")
 
         self.logger = logging.getLogger(f"cache_{self.name}")
-        self.cache = dc.Cache(f"cache/{self.name}")
+        self.cache = dc.Cache(
+            f"cache/{self.name}",
+        )
+        self.cache.reset("size_limit", int(1e11))
         self.sess = requests.session()
 
     def __iter__(self):
@@ -178,7 +181,6 @@ class CachedDownloader:
         def protect(
             self, keys, force=False, raise_on_missing=False, *args, **kwargs
         ):
-
             # If a key is passed, turn it into a list
             if not pd.api.types.is_list_like(keys):
                 keys = list([keys])
@@ -202,7 +204,6 @@ class CachedDownloader:
 
                 # Add any found values to the cache
                 for k in chunk:
-
                     if str(k) not in result:
                         logging.warning(f"{k} not found in {self.name}")
                         mvals[str(k)] = self.datatype()

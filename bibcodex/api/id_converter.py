@@ -19,7 +19,6 @@ class PMC_IdConverter_downloader(CachedDownloader):
 
     @CachedDownloader.cached
     def get_from_DOIs(self, dois: List[int]) -> Dict[str, datatype]:
-
         url = "https://www.ncbi.nlm.nih.gov/pmc/utils/idconv/v1.0/"
         params = {
             "email": "travis.hoppe+bibcodex@gmail.com",

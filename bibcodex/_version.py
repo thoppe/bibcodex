@@ -1,6 +1,8 @@
-__version__ = "1.1.5"
+__version__ = "1.1.7"
 
 """
+Version 1.1.7: Up the default cache to a much larger value
+Version 1.1.6: Up chunksize in pubmed from 10 to 50
 Version 1.1.5: Fix, cache between chunks error on missing key
 Version 1.1.4: Cache between chunks
 Version 1.1.3: Fix empty dataframe bug.

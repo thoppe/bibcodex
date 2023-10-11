@@ -165,7 +165,6 @@ def test_wrong_index_name():
 
 
 def test_invalid_API(sample_bibcodex):
-
     df = sample_bibcodex.set_index("pmid")
 
     with pytest.raises(NotImplementedError):

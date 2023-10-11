@@ -16,7 +16,6 @@ class SemanticScholar_downloader(CachedDownloader):
     chunksize = 1
 
     def access_API(self, records: List[int], url: str) -> Dict[str, datatype]:
-
         if len(records) > 1:
             raise ValueError("Semantic Scholar can not do multi downloads")
 
@@ -36,7 +35,6 @@ class SemanticScholar_downloader(CachedDownloader):
 
     @CachedDownloader.cached
     def get_from_PMIDs(self, pmids: List[int]) -> Dict[str, datatype]:
-
         url = "https://api.semanticscholar.org/v1/paper/PMID:"
         results, pmid = self.access_API(pmids, url)
 
@@ -47,7 +45,6 @@ class SemanticScholar_downloader(CachedDownloader):
 
     @CachedDownloader.cached
     def get_from_DOIs(self, dois: List[int]) -> Dict[str, datatype]:
-
         url = "https://api.semanticscholar.org/v1/paper/"
         results, doi = self.access_API(dois, url)
 

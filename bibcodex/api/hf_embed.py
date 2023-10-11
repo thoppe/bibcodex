@@ -13,7 +13,6 @@ class HF_transformer(CachedDownloader):
     datatype = np.ndarray
 
     def __init__(self):
-
         self.model = None
         self.tokenizer = None
         self.model_name = "allenai/specter"

@@ -6,7 +6,6 @@ from .api import pubmed, semanticScholar, icite, doi2pmid, hfembed
 
 @pd.api.extensions.register_dataframe_accessor("bibcodex")
 class Codex:
-
     # Reuse the components across all Codex instances
     pubmed = pubmed
     semanticScholar = semanticScholar
@@ -75,7 +74,6 @@ class Codex:
         return self.df["pmid"].apply(self.pubmed.check_pmid)
 
     def set_api_key(self, api: str, key: str) -> None:
-
         API = {
             "pubmed": pubmed,
             "semanticScholar": semanticScholar,
@@ -88,7 +86,6 @@ class Codex:
         API[api].api_key = key
 
     def download(self, api="pubmed"):
-
         """
         Downloads (or pulls from the cache) data from an API (e.g. PubMed).
         Uses the current index (either a pmid or doi required).
@@ -157,7 +154,6 @@ class Codex:
         return data
 
     def embed(self):
-
         df = self.df
         text_columns = ["title", "abstract"]
 

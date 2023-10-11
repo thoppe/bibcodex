@@ -299,7 +299,6 @@ def parse_pubmed_references(path):
                     )
                     article_title = article_title.replace("\n", " ").strip()
                 else:
-
                     article_title = ""
                 if ref.find("source") is not None:
                     journal = ref.find("source").text or ""
